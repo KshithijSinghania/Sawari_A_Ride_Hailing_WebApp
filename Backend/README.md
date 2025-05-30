@@ -268,3 +268,108 @@ Requires a valid JWT token in the `Authorization` header as `Bearer <token>` or 
 curl -X GET http://localhost:4000/users/logout \
   -H "Authorization: Bearer <jwt_token>"
 ```
+
+---
+
+# Captain Registration API
+
+## Endpoint
+
+`POST /captains/register`
+
+## Description
+
+Registers a new captain in the system.  
+Requires a valid email, a first name (minimum 3 characters), a password (minimum 6 characters), and vehicle details.  
+Returns the created captain object upon success.
+
+## Request Body
+
+Send as JSON:
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Smith"
+  },
+  "email": "jane.smith@example.com",
+  "password": "yourpassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Required Fields
+
+- `fullname.firstname` (string, min 3 chars, required)
+- `fullname.lastname` (string, optional)
+- `email` (string, valid email, required)
+- `password` (string, min 6 chars, required)
+- `vehicle.color` (string, min 3 chars, required)
+- `vehicle.plate` (string, min 3 chars, required)
+- `vehicle.capacity` (integer, min 1, required)
+- `vehicle.vehicleType` (string, one of: `car`, `motorcycle`, `auto`, required)
+
+## Responses
+
+### Success
+
+- **Status:** `201 Created`
+- **Body:**
+  ```json
+  {
+    "_id": "...",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+    // ...other fields
+  }
+  ```
+
+### Validation Error
+
+- **Status:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Please enter a valid email address",
+        "param": "email",
+        "location": "body"
+      }
+      // ...other errors
+    ]
+  }
+  ```
+
+### Missing Fields
+
+- **Status:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "message": "All fields are required"
+  }
+  ```
+
+## Example
+
+```sh
+curl -X POST http://localhost:4000/captains/register \
+  -H "Content-Type: application/json" \
+  -d '{"fullname":{"firstname":"Jane","lastname":"Smith"},"email":"jane.smith@example.com","password":"yourpassword","vehicle":{"color":"Red","plate":"XYZ123","capacity":4,"vehicleType":"car"}}'
+```
