@@ -1,34 +1,30 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const WaitingForCaptainPanel = (props) => {
+const FinishRidePanel = (props) => {
   return (
     <div>
       <div className="flex items-cols justify-between relative">
-        <h2 className="text-xl font-semibold mb-5">Meet at the pickup point</h2>
+        <h2 className="text-2xl font-bold mb-5">Finish this Ride</h2>
         <h5
           onClick={() => {
-            props.setwaitingForDriver(false);
+            props.setFinishRidePanel(false);
           }}
           className="text-3xl text-gray-500 cursor-pointer opacity-100"
         >
           <i className="ri-arrow-down-wide-fill absolute top-0.7 right-5 "></i>
         </h5>
       </div>
-      <div className="flex items-center justify-between mb-4">
-        <div>
+      <div className="flex items-center justify-between border-2 bg-gray-100 p-3 border-yellow-400 rounded-xl">
+        <div className="flex items-center gap-3">
           <img
-            className="h-12"
-            src="https://swyft.pl/wp-content/uploads/2023/05/can-1-person-use-uberx.jpg"
+            className="h-15 object-cover w-15 rounded-full"
+            src="https://img.etimg.com/thumb/width-420,height-315,imgsize-9870,resizemode-75,msid-112069891/news/politics-and-nation/rahul-gandhis-inner-circle-a-mix-of-fresh-and-seasoned-leaders.jpg"
             alt=""
           />
+          <h2 className="text-lg font-medium">Rahul Gandhi</h2>
         </div>
-        <div className="text-right">
-          <h2 className="text-lg font-semibold">ABC</h2>
-          <h4 className="text-xl font-bold -mt-1">JH01 AB 1234</h4>
-          <p className="text-sm font-medium text-gray-600">
-            Maruti Suzuki Alto
-          </p>
-        </div>
+        <h5 className="text-lg font-semibold">2.2Km</h5>
       </div>
       <div className="flex gap-4 mt-1 justify-between items-center flex-col">
         <div className="w-full  flex flex-col gap-4 mt-3">
@@ -64,11 +60,20 @@ const WaitingForCaptainPanel = (props) => {
             </div>
           </div>
         </div>
-
-        {/* <button className='w-full mt-5 bg-green-700 text-white text-lg font-semibold p-3 rounded-lg'>Confirm</button> */}
+        <div className="mt-6 w-full">
+          <Link
+            to="/captain-home"
+            className="w-full mt-5 flex justify-center bg-green-700 text-white text-lg font-semibold p-3 rounded-lg"
+          >
+            Finish Ride
+          </Link>
+          <p className="text-red-500 text-sm mt-4">
+            click on finish ride if you have completed payment
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default WaitingForCaptainPanel;
+export default FinishRidePanel;

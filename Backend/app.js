@@ -12,6 +12,8 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+const mapsRoutes=require('./routes/maps.routes');
+const rideRoutes=require('./routes/ride.routes');
 
 connectToDB();
 
@@ -21,6 +23,8 @@ app.get('/',(req,res)=>{
 
 app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
+app.use('/maps',mapsRoutes);
+app.use('/rides',rideRoutes);
 
 module.exports=app;
 
