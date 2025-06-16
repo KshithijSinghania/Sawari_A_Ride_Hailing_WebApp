@@ -9,6 +9,7 @@ import { useEffect, useContext } from "react";
 import { SocketContext } from "../context/socketContext";
 import { CaptainDataContext } from "../context/captainContext";
 import axios from "axios";
+import LiveTracking from "../components/LiveTracking";
 
 const CaptainHome = () => {
   const [RidePopUpPanel, setRidePopUpPanel] = useState(false);
@@ -119,7 +120,7 @@ const CaptainHome = () => {
     <div className="h-screen">
       <div className="flex items-center justify-between w-screen fixed p-6 top-0">
         <img
-          className="w-14"
+          className="w-14 l-5"
           src="https://pngimg.com/d/uber_PNG24.png"
           alt=""
         />
@@ -130,12 +131,8 @@ const CaptainHome = () => {
           <i className="text-lg font-md ri-logout-box-line"></i>
         </Link>
       </div>
-      <div className="h-3/5">
-        <img
-          className="h-full w-full object-cover"
-          src="https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif"
-          alt=""
-        />
+      <div className="h-3/5 z-[-1] relative">
+        <LiveTracking></LiveTracking>
       </div>
       <div className="h-2/5 p-6">
         <CaptainDetails></CaptainDetails>
