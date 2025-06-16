@@ -1,4 +1,5 @@
 const rideModel= require('../models/ride.model');
+const { sendMessageToSocketId } = require('../socket');
 const mapService=require('./maps.service');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -17,30 +18,34 @@ function getOtp(num){
     return { otp, hashedOtp };
 }
 
-module.exports.createRide=async({user,pickup,destination,vehicleType})=>{
-    if(!user||!pickup||!destination||!vehicleType){
+module.exports.createRide = async ({ user, pickup, destination, vehicleType }) => {
+    if (!user || !pickup || !destination || !vehicleType) {
         throw new Error('All fields are required');
     }
-    const fare=await getFare(pickup,destination);
 
-    const ride=rideModel.create({
+    const { fares, distanceInKm } = await getFare(pickup, destination);
+
+    const ride = await rideModel.create({
         user,
         pickup,
         destination,
-        fare:fare[vehicleType],
+        fare: fares[vehicleType],
+        distance: distanceInKm,
         otp: getOtp(6).otp
-    })
+    });
+
     return ride;
-}
+};
+
 
 async function getFare(pickup, destination) {
     if (!pickup || !destination) {
         throw new Error('Pickup and destination are required');
     }
+
     const distanceTime = await mapService.getDistanceTime(pickup, destination);
     const { distance, duration } = distanceTime;
 
-    // Check if distance and duration exist and have value
     if (!distance || !duration || typeof distance.value !== 'number' || typeof duration.value !== 'number') {
         throw new Error('Invalid distance or duration data from Google Maps API');
     }
@@ -60,7 +65,88 @@ async function getFare(pickup, destination) {
         fares[type] = rate.base + (distanceInKm * rate.perKm) + (durationInMin * rate.perMin);
     }
 
-    return fares;
+    return { fares, distanceInKm, durationInMin };
 }
 
+
 module.exports.getFare=getFare;
+
+module.exports.confirmRide = async ({ rideId, captain }) => {
+    if (!rideId || !captain || !captain._id) {
+        throw new Error('Ride ID and captain are required');
+    }
+
+    await rideModel.findOneAndUpdate(
+        { _id: rideId },
+        {
+            status: 'accepted',
+            captain: captain._id
+        }
+    );
+
+    const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain').select('+otp');
+
+    if (!ride) {
+        throw new Error('Ride not found');
+    }
+
+    return ride;
+};
+
+module.exports.startRide=async({rideId,otp,captain})=>{
+    if(!rideId || !otp){
+        throw new Error('Ride Id and Otp are required');
+    }
+
+    const ride=await rideModel.findOne({
+        _id:rideId
+    }).populate('user').populate('captain').select('+otp');
+
+    if(!ride){
+        throw new Error('Ride not Found');
+    }
+
+    if(ride.status!== 'accepted'){
+        throw new Error('Ride not accepted');
+    }
+
+    if(ride.otp!== otp){
+        throw new Error('Invalid OTP');
+    }
+
+    await rideModel.findOneAndUpdate({
+        _id:rideId
+    },{
+        status:'ongoing'
+    })
+
+    sendMessageToSocketId(ride.user.socketId,{
+        event:'ride-started',
+        data:ride
+    })
+    return ride;
+}
+
+module.exports.endRide = async ({ rideId, captain }) => {
+    if (!rideId) {
+        throw new Error('Ride id is required');
+    }
+
+    const ride = await rideModel.findOne({
+        _id: rideId,
+        captain: captain._id
+    }).populate('user').populate('captain').select('+otp');
+
+    if (!ride) {
+        throw new Error('Ride not found');
+    }
+
+    if (ride.status !== 'ongoing') {
+        throw new Error('Ride not ongoing');
+    }
+    ride.status = 'completed';
+    await ride.save();
+    return ride;
+};
+
+

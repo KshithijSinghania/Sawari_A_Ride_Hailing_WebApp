@@ -1,7 +1,28 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { SocketContext } from "../context/socketContext";
 
 const Riding = () => {
+  const location = useLocation();
+  const { ride } = location.state || {};
+  const { socket } = useContext(SocketContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleRideEnded = () => {
+      navigate("/home");
+    };
+
+    socket.on("ride-ended", handleRideEnded);
+
+    // Clean up on unmount to prevent memory leak
+    return () => {
+      socket.off("ride-ended", handleRideEnded);
+    };
+  }, [socket, navigate]);
+
   return (
     <div className="h-screen">
       <Link
@@ -17,7 +38,7 @@ const Riding = () => {
           alt=""
         />
       </div>
-      <div className="h-1/2 p-4 ">
+      <div className="h-1/2 p-4">
         <div className="flex items-center justify-between mb-4">
           <div>
             <img
@@ -27,8 +48,14 @@ const Riding = () => {
             />
           </div>
           <div className="text-right">
-            <h2 className="text-lg font-semibold">ABC</h2>
-            <h4 className="text-xl font-bold -mt-1">JH01 AB 1234</h4>
+            <h2 className="text-lg font-semibold mb-2">
+              {ride?.captain.fullname.firstname +
+                " " +
+                ride?.captain.fullname.lastname}
+            </h2>
+            <h4 className="text-xl font-bold -mt-1">
+              {ride?.captain.vehicle.plate}
+            </h4>
             <p className="text-sm font-medium text-gray-600">
               Maruti Suzuki Alto
             </p>
@@ -43,7 +70,7 @@ const Riding = () => {
               <div className="flex flex-col justify-center">
                 <h2 className="text-2xl font-semibold">End Point</h2>
                 <p className="text-gray-600 text-md font-medium">
-                  Ending location
+                  {ride?.destination}
                 </p>
               </div>
             </div>
@@ -53,7 +80,12 @@ const Riding = () => {
               </h5>
               <div className="flex flex-col justify-center">
                 <h2 className="text-2xl font-semibold">Cash</h2>
-                <p className="text-gray-600 text-md font-medium">Rs1122</p>
+                <p className="text-gray-600 text-md font-medium">
+                  ₹
+                  {typeof ride?.fare === "number"
+                    ? ride?.fare.toFixed(2)
+                    : "--"}
+                </p>
               </div>
             </div>
           </div>

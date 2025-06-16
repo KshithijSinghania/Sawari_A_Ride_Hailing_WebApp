@@ -1,11 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ConfirmRidePopUp = (props) => {
   const [otp, setotp] = useState("");
+  const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,
+      {
+        params: { rideId: props.ride._id, otp: otp },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      props.setConfirmRidePopUpPanel(false);
+      props.setRidePopUpPanel(false);
+      navigate("/captain-riding", { state: { ride: props.ride } });
+    }
   };
 
   return (
@@ -28,9 +45,17 @@ const ConfirmRidePopUp = (props) => {
             src="https://img.etimg.com/thumb/width-420,height-315,imgsize-9870,resizemode-75,msid-112069891/news/politics-and-nation/rahul-gandhis-inner-circle-a-mix-of-fresh-and-seasoned-leaders.jpg"
             alt=""
           />
-          <h2 className="text-lg font-medium">Rahul Gandhi</h2>
+          <h2 className="text-lg font-medium capitalize">
+            {props.ride?.user.fullname.firstname +
+              " " +
+              props.ride?.user.fullname.lastname}
+          </h2>
         </div>
-        <h5 className="text-lg font-semibold">2.2Km</h5>
+        <h5 className="text-lg font-semibold">
+          {typeof props.ride?.distance === "number"
+            ? `${props.ride.distance.toFixed(2)} km`
+            : "--"}
+        </h5>
       </div>
       <div className="flex gap-4 mt-1 justify-between items-center flex-col">
         <div className="w-full  flex flex-col gap-4 mt-3">
@@ -41,7 +66,7 @@ const ConfirmRidePopUp = (props) => {
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">Start Point</h2>
               <p className="text-gray-600 text-md font-medium">
-                Starting location
+                {props.ride?.pickup}
               </p>
             </div>
           </div>
@@ -52,7 +77,7 @@ const ConfirmRidePopUp = (props) => {
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">End Point</h2>
               <p className="text-gray-600 text-md font-medium">
-                Ending location
+                {props.ride?.destination}
               </p>
             </div>
           </div>
@@ -62,7 +87,12 @@ const ConfirmRidePopUp = (props) => {
             </h5>
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">Cash</h2>
-              <p className="text-gray-600 text-md font-medium">Rs1122</p>
+              <p className="text-gray-600 text-md font-medium">
+                ₹
+                {typeof props.ride?.fare === "number"
+                  ? props.ride?.fare.toFixed(2)
+                  : "--"}
+              </p>
             </div>
           </div>
         </div>
@@ -79,12 +109,9 @@ const ConfirmRidePopUp = (props) => {
             placeholder="Enter OTP"
           />
           <div className="mt-6">
-            <Link
-              to="/captain-riding"
-              className="w-full mt-5 flex justify-center bg-green-700 text-white text-lg font-semibold p-3 rounded-lg"
-            >
+            <button className="w-full mt-5 flex justify-center bg-green-700 text-white text-lg font-semibold p-3 rounded-lg">
               Confirm Ride
-            </Link>
+            </button>
             <button
               type="button"
               onClick={() => {

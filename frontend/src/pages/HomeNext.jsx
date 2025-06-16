@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -7,6 +7,10 @@ import VehiclePanelSearch from "../components/VehiclePanelSearch";
 import ConfirmRidePanel from "../components/ConfirmRidePanel";
 import FindingCaptainPanel from "../components/FindingCaptainPanel";
 import WaitingForCaptainPanel from "../components/WaitingForCaptainPanel";
+import { SocketContext } from "../context/socketContext";
+import { UserDataContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 
 const HomeNext = () => {
@@ -29,6 +33,24 @@ const HomeNext = () => {
   const waitingForDriverRef = useRef(null);
   const [Fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState(null);
+  const { socket, sendMessage, recieveMessage } = useContext(SocketContext);
+  const navigate = useNavigate();
+
+  const { user, setUser } = useContext(UserDataContext);
+
+  useEffect(() => {
+    if (user?._id) {
+      console.log(user);
+      sendMessage("join", { userType: "user", userId: user._id });
+    }
+  }, [user?._id]);
+
+  socket.on("ride-confirmed", (ride) => {
+    setVehicleFound(false);
+    setwaitingForDriver(true);
+    setRide(ride);
+  });
 
   useGSAP(() => {
     if (panelOpen) {
@@ -132,7 +154,7 @@ const HomeNext = () => {
           },
         }
       );
-      setFare(response.data); // <-- Add this line!
+      setFare(response.data.fares);
     } catch (err) {
       // Optionally handle error
     }
@@ -226,6 +248,11 @@ const HomeNext = () => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
+
+  socket.on("ride-started", (ride) => {
+    setwaitingForDriver(false);
+    navigate("/riding", { state: { ride } });
+  });
 
   return (
     <div className="h-screen relative overflow-hidden">
@@ -340,7 +367,10 @@ const HomeNext = () => {
         ref={waitingForDriverRef}
         className="fixed w-full z-10 rounded-t-2xl bg-white bottom-0 px-3 py-6"
       >
-        <WaitingForCaptainPanel setwaitingForDriver={setwaitingForDriver} />
+        <WaitingForCaptainPanel
+          setwaitingForDriver={setwaitingForDriver}
+          ride={ride}
+        />
       </div>
     </div>
   );

@@ -21,9 +21,17 @@ const RidePopUp = (props) => {
             src="https://img.etimg.com/thumb/width-420,height-315,imgsize-9870,resizemode-75,msid-112069891/news/politics-and-nation/rahul-gandhis-inner-circle-a-mix-of-fresh-and-seasoned-leaders.jpg"
             alt=""
           />
-          <h2 className="text-lg font-medium">Rahul Gandhi</h2>
+          <h2 className="text-lg font-medium">
+            {props.ride?.user.fullname.firstname +
+              " " +
+              props.ride?.user.fullname.firstname}
+          </h2>
         </div>
-        <h5 className="text-lg font-semibold">2.2Km</h5>
+        <h5 className="text-lg font-semibold">
+          {typeof props.ride?.distance === "number"
+            ? `${props.ride.distance.toFixed(2)} km`
+            : "--"}
+        </h5>
       </div>
       <div className="flex gap-4 mt-1 justify-between items-center flex-col">
         <div className="w-full  flex flex-col gap-4 mt-3">
@@ -34,7 +42,7 @@ const RidePopUp = (props) => {
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">Start Point</h2>
               <p className="text-gray-600 text-md font-medium">
-                Starting location
+                {props.ride?.pickup}
               </p>
             </div>
           </div>
@@ -45,7 +53,7 @@ const RidePopUp = (props) => {
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">End Point</h2>
               <p className="text-gray-600 text-md font-medium">
-                Ending location
+                {props.ride?.destination}
               </p>
             </div>
           </div>
@@ -55,7 +63,12 @@ const RidePopUp = (props) => {
             </h5>
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">Cash</h2>
-              <p className="text-gray-600 text-md font-medium">Rs1122</p>
+              <p className="text-gray-600 text-md font-medium">
+                ₹
+                {typeof props.ride?.fare === "number"
+                  ? props.ride?.fare.toFixed(2)
+                  : "--"}
+              </p>
             </div>
           </div>
         </div>
@@ -63,6 +76,7 @@ const RidePopUp = (props) => {
         <button
           onClick={() => {
             props.setConfirmRidePopUpPanel(true);
+            props.confirmRide();
           }}
           className="w-full mt-5 bg-green-700 text-white text-lg font-semibold p-3 rounded-lg"
         >

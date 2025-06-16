@@ -1,6 +1,5 @@
 const VehiclePanelSearch = (props) => {
   const fare = props.fare || {};
-
   return (
     <div>
       <div className="flex items-cols justify-between relative">

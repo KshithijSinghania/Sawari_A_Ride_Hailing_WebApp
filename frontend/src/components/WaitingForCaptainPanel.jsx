@@ -4,7 +4,9 @@ const WaitingForCaptainPanel = (props) => {
   return (
     <div>
       <div className="flex items-cols justify-between relative">
-        <h2 className="text-xl font-semibold mb-5">Meet at the pickup point</h2>
+        <h2 className="text-2xl font-semibold mb-5">
+          Meet at the pickup point
+        </h2>
         <h5
           onClick={() => {
             props.setwaitingForDriver(false);
@@ -23,11 +25,18 @@ const WaitingForCaptainPanel = (props) => {
           />
         </div>
         <div className="text-right">
-          <h2 className="text-lg font-semibold">ABC</h2>
-          <h4 className="text-xl font-bold -mt-1">JH01 AB 1234</h4>
+          <h2 className="text-lg font-semibold mb-2 capitalize">
+            {props.ride?.captain.fullname.firstname +
+              " " +
+              props.ride?.captain.fullname.lastname}
+          </h2>
+          <h4 className="text-xl font-bold -mt-1">
+            {props.ride?.captain.vehicle.plate}
+          </h4>
           <p className="text-sm font-medium text-gray-600">
             Maruti Suzuki Alto
           </p>
+          <h1 className="text-xl font-bold mt-2">OTP - {props.ride?.otp}</h1>
         </div>
       </div>
       <div className="flex gap-4 mt-1 justify-between items-center flex-col">
@@ -39,7 +48,7 @@ const WaitingForCaptainPanel = (props) => {
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">Start Point</h2>
               <p className="text-gray-600 text-md font-medium">
-                Starting location
+                {props.ride?.pickup}
               </p>
             </div>
           </div>
@@ -50,7 +59,7 @@ const WaitingForCaptainPanel = (props) => {
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">End Point</h2>
               <p className="text-gray-600 text-md font-medium">
-                Ending location
+                {props.ride?.destination}
               </p>
             </div>
           </div>
@@ -60,7 +69,12 @@ const WaitingForCaptainPanel = (props) => {
             </h5>
             <div className="flex flex-col justify-center">
               <h2 className="text-2xl font-semibold">Cash</h2>
-              <p className="text-gray-600 text-md font-medium">Rs1122</p>
+              <p className="text-gray-600 text-md font-medium">
+                ₹
+                {typeof props.ride?.fare === "number"
+                  ? props.ride?.fare.toFixed(2)
+                  : "--"}
+              </p>
             </div>
           </div>
         </div>
