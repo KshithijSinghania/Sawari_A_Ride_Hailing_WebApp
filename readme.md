@@ -47,7 +47,7 @@ This is a full-stack Uber-inspired web application that lets users book rides, t
 
 ```
 Uber-Clone/
-├── Frontend/            # Frontend (React)
+├── frontend/            # Frontend (React)
 │   └── src/
 │       ├── components/
 │       ├── pages/
@@ -80,20 +80,20 @@ cd Uber-Clone
 ### 2. Start the Backend
 
 ```bash
-cd server
+cd Backend
 npm install
 # Create a .env file with:
 # MONGO_URI=your_mongo_uri
 # JWT_SECRET=your_jwt_secret
 # STRIPE_SECRET_KEY=your_stripe_key
 # PORT=4000
-node index.js
+npx nodemon
 ```
 
 ### 3. Start the Frontend
 
 ```bash
-cd client
+cd frontend
 npm install
 # Create a .env file with:
 # VITE_BASE_URL=http://localhost:4000
@@ -117,11 +117,17 @@ npm run dev
 
 **Rides**
 
-- `POST /api/rides/book`
+- `POST /rides/create`
 - `PUT /api/rides/start-ride`
 - `PUT /api/rides/end-ride`
 - `GET /api/rides/user`
 - `GET /api/rides/captain`
+
+**Maps**
+
+- `GET /maps/get-coordinates?address=<address>`
+- `GET /maps/get-distance-time?origin=<origin>&destination=<destination>`
+- `GET /maps/get-suggestions?input=<input>`
 
 **Captain**
 
@@ -147,7 +153,7 @@ npm run dev
 
 ## 🙌 Author
 
-**Kshithij Singhania**\
+**Kshithij Singhania**
 GitHub: [@KshithijSinghania](https://github.com/KshithijSinghania)
 
 ---
@@ -155,4 +161,3 @@ GitHub: [@KshithijSinghania](https://github.com/KshithijSinghania)
 ## 📝 License
 
 This project is licensed under the MIT License. Feel free to fork and contribute!
-
