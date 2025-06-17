@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+
 // ✅ Register models
 require('./models/user.model');
 require('./models/captain.model');
@@ -21,6 +22,7 @@ const userRoutes = require('./routes/user.routes');
 const captainRoutes = require('./routes/captain.routes');
 const mapsRoutes = require('./routes/maps.routes');
 const rideRoutes = require('./routes/ride.routes');
+const stripeRoutes = require('./routes/payment.routes');
 
 // Connect DB and mount routes
 connectToDB();
@@ -33,5 +35,6 @@ app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
 app.use('/maps', mapsRoutes);
 app.use('/rides', rideRoutes);
+app.use('/api', stripeRoutes);
 
 module.exports = app;

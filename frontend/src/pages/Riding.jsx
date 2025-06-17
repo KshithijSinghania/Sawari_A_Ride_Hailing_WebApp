@@ -2,12 +2,50 @@ import React, { useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SocketContext } from "../context/socketContext";
 import LiveTracking from "../components/LiveTracking";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Riding = () => {
   const location = useLocation();
   const { ride } = location.state || {};
   const { socket } = useContext(SocketContext);
   const navigate = useNavigate();
+  const makePayment = async () => {
+    try {
+      const stripe = await loadStripe(
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+      );
+
+      const response = await fetch(
+        "http://localhost:4000/api/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: ride?.fare || 100,
+            rideId: ride?._id,
+          }),
+        }
+      );
+
+      const text = await response.text();
+      console.log("Raw response text:", text);
+
+      // Attempt to parse it as JSON
+      const session = JSON.parse(text);
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+    }
+  };
 
   useEffect(() => {
     if (!socket) return;
@@ -86,7 +124,11 @@ const Riding = () => {
               </div>
             </div>
           </div>
-          <button className="w-full mt-1 bg-green-700 text-white text-lg font-semibold p-3 rounded-lg mb-3">
+          <button
+            onClick={makePayment}
+            rideData={rideData}
+            className="w-full mt-1 bg-green-700 text-white text-lg font-semibold p-3 rounded-lg mb-3"
+          >
             Make Payment
           </button>
         </div>

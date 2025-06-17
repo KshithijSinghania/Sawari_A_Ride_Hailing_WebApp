@@ -15,6 +15,8 @@ import CaptainLogout from "./pages/CaptainLogout";
 import Riding from "./pages/Riding";
 import CaptainRiding from "./pages/CaptainRiding";
 import "remixicon/fonts/remixicon.css";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailed from "./pages/PaymentFailed";
 
 const App = () => {
   return (
@@ -59,6 +61,8 @@ const App = () => {
             </CaptainProtectedWrapper>
           }
         ></Route>
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
       </Routes>
     </div>
   );
