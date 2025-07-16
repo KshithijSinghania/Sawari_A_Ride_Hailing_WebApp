@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { SocketContext } from "../context/socketContext";
+import { SocketContext } from "../context/SocketContext";
 import LiveTracking from "../components/LiveTracking";
 import { loadStripe } from "@stripe/stripe-js";
 
