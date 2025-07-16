@@ -7,7 +7,7 @@ import VehiclePanelSearch from "../components/VehiclePanelSearch";
 import ConfirmRidePanel from "../components/ConfirmRidePanel";
 import FindingCaptainPanel from "../components/FindingCaptainPanel";
 import WaitingForCaptainPanel from "../components/WaitingForCaptainPanel";
-import { SocketContext } from "../context/socketContext";
+import { SocketContext } from "../context/SocketContext";
 import { UserDataContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../components/LiveTracking";
