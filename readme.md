@@ -4,8 +4,8 @@ This is a full-stack Uber-inspired web application that lets users book rides, t
 
 ## 🔗 Live Demo
 
-- 🌐 **Frontend (Vercel):** [https://uber-clone-git-main-kshithij-singhanias-projects.vercel.app](https://uber-clone-git-main-kshithij-singhanias-projects.vercel.app)
-- ⚙️ **Backend (Render):** [https://uber-clone-usas.onrender.com](https://uber-clone-usas.onrender.com)
+- 🌐 **Frontend (Vercel):** [https://Sawari-git-main-kshithij-singhanias-projects.vercel.app](https://uber-clone-git-main-kshithij-singhanias-projects.vercel.app)
+- ⚙️ **Backend (Render):** [https://Sawari-usas.onrender.com](https://uber-clone-usas.onrender.com)
 ---
 
 ## 📦 Features
@@ -155,6 +155,9 @@ npm run dev
 
 **Kshithij Singhania**
 GitHub: [@KshithijSinghania](https://github.com/KshithijSinghania)
+
+**Praneet Masiya**
+GitHub: [@Praneet7871](https://github.com/Praneet7871)
 
 ---
 
