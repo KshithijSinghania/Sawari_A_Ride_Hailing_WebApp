@@ -1,4 +1,4 @@
-# 🚗 Uber Clone – Full Stack Ride-Hailing Web App
+# 🚗 Sawari – Full Stack Ride-Hailing Web App
 
 This is a full-stack Uber-inspired web application that lets users book rides, track drivers in real-time, and view ride history. Captains (drivers) can accept rides, see earnings, and update trip status. Built using modern web technologies including React, Node.js, MongoDB, and Socket.IO.
 
