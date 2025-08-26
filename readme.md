@@ -2,7 +2,7 @@
 
 This is a full-stack Uber-inspired web application that lets users book rides, track drivers in real-time, and view ride history. Captains (drivers) can accept rides, see earnings, and update trip status. Built using modern web technologies including React, Node.js, MongoDB, and Socket.IO.
 
-## 🔗 Live Demo
+## 🔗Live Demo
 
 - 🌐 **Frontend (Vercel):** [https://Sawari-git-main-kshithij-singhanias-projects.vercel.app](https://uber-clone-git-main-kshithij-singhanias-projects.vercel.app)
 - ⚙️ **Backend (Render):** [https://Sawari-usas.onrender.com](https://uber-clone-usas.onrender.com)
